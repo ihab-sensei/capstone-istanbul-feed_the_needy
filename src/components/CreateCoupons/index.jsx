@@ -34,17 +34,20 @@ const CreateCoupons = ({ isTesting }) => {
     "200₺": true,
   });
 
-  const getRestaurantInfo = async (id) => {
-    const res = await db.collection("restaurants").doc(id).get();
-    const data = res.data();
-    setRestaurant(data);
-  };
-
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
-        getRestaurantInfo(user.uid);
+        const unsubscribe = db
+          .collection("restaurants")
+          .doc(user.uid)
+          .onSnapshot((snapshot) => {
+            const dataArr = [];
+            dataArr.push({ ...snapshot.data() });
+            setRestaurant(dataArr[0]);
+          });
+        return unsubscribe;
       }
+      return user;
     });
   }, []);
 

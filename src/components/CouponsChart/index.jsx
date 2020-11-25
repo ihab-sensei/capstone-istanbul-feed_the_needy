@@ -23,7 +23,6 @@ const CouponsChart = () => {
           .collection("sampleSoldCoupons")
           .doc(user.uid)
           .collection("coupons")
-          .where("sellDate", "<=", date)
           .onSnapshot((snapshot) => {
             const dataArr = [];
             snapshot.forEach((doc) => {
